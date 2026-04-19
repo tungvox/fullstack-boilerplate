@@ -17,7 +17,7 @@ This app also reads `VERCEL_URL` at runtime on the server for redirects when `NE
 
 ## Build and output
 
-- **Build command:** `npm run build` (default for Next.js)
+- **Build command:** `npm run build` — runs `next build --webpack` so the PWA Workbox plugin can emit `public/sw.js` (see [`docs/pwa.md`](pwa.md)).
 - **Output:** Next.js on Vercel uses the default serverless/edge layout; no custom `vercel.json` is required for a standard App Router app.
 
 ## Optional: Vercel Analytics

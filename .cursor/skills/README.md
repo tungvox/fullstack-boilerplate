@@ -1,26 +1,42 @@
 # Agent skills (Vercel Labs)
 
-This directory is reserved for **project-local** Agent Skills.
+## One-command install (recommended)
 
-## Install Vercel Labs skills
-
-From the repository root (requires network access):
+From the repository root after cloning the template:
 
 ```bash
-npx skills add vercel-labs/agent-skills
+npm run setup
 ```
 
-Useful skills for this stack:
+That runs [`scripts/setup.mjs`](../../scripts/setup.mjs): `npm ci`, Playwright Chromium, and a **non-interactive** install of all skills from [`vercel-labs/agent-skills`](https://github.com/vercel-labs/agent-skills) for **Cursor** (`--copy` avoids symlink issues on some Windows setups).
 
-- `react-best-practices` — performance and correctness guidance aligned with Vercel’s React guidance
-- `web-design-guidelines` — accessibility and UX review prompts
-- `deploy-to-vercel` — deployment-oriented checklists
+## Where files go (Cursor)
 
-Target Cursor explicitly if the CLI prompts for an editor/agent.
+Per the official [`skills` CLI](https://github.com/vercel-labs/skills), **Cursor** installs project-scoped skills under **[`.agents/skills/`](../../.agents/skills/)** (not this folder). That directory is **gitignored** so each clone can regenerate skills locally.
 
-## Offline / repeatable clones
+This `.cursor/skills/` folder stays for **human-written** notes only.
 
-If you need skills committed into git (for air‑gapped workflows), install them locally above, then add the generated skill folders **intentionally** to version control. Keep third‑party licenses intact and review updates on a schedule.
+## Manual install / updates
+
+```bash
+npx skills add vercel-labs/agent-skills --skill '*' -a cursor -y --copy
+```
+
+Update installed skills (non-interactive scope detection):
+
+```bash
+npx skills update -y
+```
+
+Upstream options and agents: [vercel-labs/skills README](https://github.com/vercel-labs/skills/blob/main/README.md).
+
+## Useful skills in that bundle
+
+The upstream bundle changes over time; after `npm run setup`, see **`.agents/skills/`** for installed folders (today that includes names like `vercel-react-best-practices`, `web-design-guidelines`, and `deploy-to-vercel`).
+
+## Offline / air-gapped workflows
+
+If you cannot run `npx` against GitHub, copy skill folders in intentionally and respect upstream licenses. Prefer documenting the provenance in your repo’s `README` or `NOTICE`.
 
 ## GitNexus skills
 

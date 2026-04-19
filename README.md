@@ -16,9 +16,10 @@ Single-user subscriptions with **Stripe Checkout + Customer Portal + webhooks**,
 - **Billing** (`/billing`) and **premium gating** (`/premium`) wired to Stripe subscription status
 - **Cursor** rules: repo conventions plus vendored **[matank001/cursor-security-rules](https://github.com/matank001/cursor-security-rules)** selections under `.cursor/rules/security/`
 - **MCP templates** for Supabase, Google Stitch, and GitNexus (`.cursor/mcp.example.json`, `docs/mcp.md`)
-- **Vercel Labs agent skills** install docs (`.cursor/skills/README.md`)
+- **One-command setup** — `npm run setup` installs deps, Playwright Chromium, and all **Vercel Labs** Cursor skills (see [`.cursor/skills/README.md`](.cursor/skills/README.md))
 - **CI** via GitHub Actions (lint, unit tests, build, Playwright)
 - **Vercel-inspired UI spec** via [getdesign](https://getdesign.md): root `DESIGN.md` (refresh with `npm run design:vercel`)
+- **PWA** — web manifest + Workbox service worker (production builds use `next build --webpack`; see [`docs/pwa.md`](docs/pwa.md))
 
 ## Prerequisites
 
@@ -29,20 +30,32 @@ Single-user subscriptions with **Stripe Checkout + Customer Portal + webhooks**,
 ## Quick start
 
 ```bash
+git clone <your-template-url> my-app
+cd my-app
+npm run setup
+```
+
+`npm run setup` runs `npm ci`, installs Playwright Chromium, and installs **all** [Vercel Labs agent skills](https://github.com/vercel-labs/agent-skills) for Cursor into `.agents/skills/` (requires network). See [`.cursor/skills/README.md`](.cursor/skills/README.md).
+
+**What setup does not do:** it does not create Supabase/Stripe projects or write secrets. After setup, copy env and wire cloud services:
+
+```bash
 cp .env.example .env.local
 ```
 
-Fill in values from [`.env.example`](.env.example): Supabase URL/keys, **`SUPABASE_SERVICE_ROLE_KEY`** (webhooks), Stripe keys, and `STRIPE_PRICE_ID`. Set `NEXT_PUBLIC_SITE_URL` on Vercel when deploying.
+Fill in values from [`.env.example`](.env.example): Supabase URL/keys, **`SUPABASE_SERVICE_ROLE_KEY`** (webhooks), Stripe keys, and `STRIPE_PRICE_ID`. Set `NEXT_PUBLIC_SITE_URL` on Vercel when deploying. Follow [`docs/saas-day-one.md`](docs/saas-day-one.md).
 
 ```bash
-npm install
 npm run dev
 ```
 
 Visit [http://127.0.0.1:3000](http://127.0.0.1:3000).
 
+If you changed dependencies without updating the lockfile and `npm ci` fails, run `npm install` to refresh `package-lock.json`, then use `npm run setup` again (or run the Playwright/skills steps from [`.cursor/skills/README.md`](.cursor/skills/README.md) manually).
+
 ## Scripts
 
+- `npm run setup` — post-clone install: `npm ci`, Playwright Chromium, Vercel Labs Cursor skills (see [`.cursor/skills/README.md`](.cursor/skills/README.md))
 - `npm run dev` — Next dev server (Turbopack)
 - `npm run build` / `npm run start` — production build and server
 - `npm run lint` — ESLint (Next core web vitals + TypeScript presets)
@@ -57,6 +70,7 @@ Visit [http://127.0.0.1:3000](http://127.0.0.1:3000).
 - [`docs/mcp.md`](docs/mcp.md) — Supabase, Google Stitch, and GitNexus MCP wiring (includes Windows `cmd /c` examples)
 - [`docs/frontend-architecture.md`](docs/frontend-architecture.md) — how this repo maps to Vercel React guidance
 - [`docs/design.md`](docs/design.md) — **getdesign** / `DESIGN.md` workflow (`npm run design:vercel`)
+- [`docs/pwa.md`](docs/pwa.md) — installable app (manifest, service worker, icons)
 - [`DESIGN.md`](DESIGN.md) — Vercel-inspired design tokens and UI rules for agents
 - [`AGENTS.md`](AGENTS.md) — guidance for AI agents working in this repository
 

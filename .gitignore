@@ -39,6 +39,13 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Vercel Labs / Cursor agent skills (installed by `npm run setup`; see `.cursor/skills/README.md`)
+/.agents/skills/
+
+# PWA (generated on `npm run build` — do not commit hashed workbox bundles)
+/public/sw.js
+/public/workbox-*.js
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

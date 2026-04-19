@@ -15,6 +15,19 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Fullstack boilerplate",
   description: "Next.js + Supabase + Vercel starter",
+  applicationName: "Fullstack boilerplate",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Fullstack boilerplate",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/icons/icon-192.png",
+  },
 };
 
 export default function RootLayout({
