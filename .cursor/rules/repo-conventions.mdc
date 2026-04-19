@@ -1,0 +1,39 @@
+---
+description: Conventions for this Next.js + Supabase boilerplate
+globs: "**/*.{ts,tsx,js,mjs}"
+alwaysApply: true
+---
+
+# Repository conventions
+
+## Environment and secrets
+
+- Never commit `.env`, `.env.local`, or tokens. The committed template is `.env.example` only.
+- Never expose `SUPABASE_SERVICE_ROLE_KEY` (or any secret) via `NEXT_PUBLIC_*` or client bundles.
+- For Supabase Auth redirects in production, set `NEXT_PUBLIC_SITE_URL` in Vercel to the canonical origin.
+
+## Supabase clients
+
+- **Server Components, Route Handlers, Server Actions:** import `createClient` from `@/lib/supabase/server`.
+- **Client Components:** import `createClient` from `@/lib/supabase/client`.
+- **Service role (dangerous):** import `createAdminClient` from `@/lib/supabase/admin` only in trusted server-only modules (Stripe webhooks). Never use it for routine user reads/writes.
+- Keep database writes that bypass RLS behind server-only code paths using appropriate keys and policies. Do not add RLS policies that let browsers mutate `billing_customers` or `billing_subscriptions`.
+
+## Stripe
+
+- Webhook handler must use the **raw request body** string when verifying signatures (`constructEvent`).
+- Put Stripe price ids and secrets in environment variables documented in `.env.example`.
+
+## Next.js boundaries
+
+- Prefer Server Components by default; add `"use client"` only for interactivity.
+- After changing auth/session behavior, verify `middleware.ts` matcher still covers the routes you care about.
+
+## UI design
+
+- For layout, typography, color, and component styling, follow the root **`DESIGN.md`** (Vercel-inspired spec from `npx getdesign@latest add vercel`, scripted as `npm run design:vercel`). Read it before substantial UI work.
+
+## MCP and agents
+
+- Follow `.cursor/rules/security/secure-mcp-usage.mdc` when suggesting MCP-driven changes.
+- Do not store PATs or Supabase service keys in the repository or in Cursor rules files.
