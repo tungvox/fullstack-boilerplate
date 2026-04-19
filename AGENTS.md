@@ -37,7 +37,8 @@ This is a reusable **Next.js + Supabase + Vercel** boilerplate oriented toward a
 
 ## GitNexus
 
-- Index or re-analyze this repo with `npx gitnexus@latest analyze` when structural refactors land so graph-backed answers stay accurate.
+- **`npm run setup`** runs `npx gitnexus@latest setup` (global Cursor MCP) and `npx gitnexus@latest analyze --skip-agents-md` (index without rewriting this file’s GitNexus sections).
+- After large structural refactors, re-run `npx gitnexus@latest analyze --skip-agents-md` (or `analyze` without the flag if you intentionally want GitNexus to refresh agent-doc sections).
 - Use GitNexus MCP for exploration and impact questions per its own documentation.
 
 ## Testing expectations

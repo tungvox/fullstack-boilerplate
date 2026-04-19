@@ -8,7 +8,7 @@ From the repository root after cloning the template:
 npm run setup
 ```
 
-That runs [`scripts/setup.mjs`](../../scripts/setup.mjs): `npm ci`, Playwright Chromium, and a **non-interactive** install of all skills from [`vercel-labs/agent-skills`](https://github.com/vercel-labs/agent-skills) for **Cursor** (`--copy` avoids symlink issues on some Windows setups).
+That runs [`scripts/setup.mjs`](../../scripts/setup.mjs): `npm ci`, Playwright Chromium, a **non-interactive** install of all skills from [`vercel-labs/agent-skills`](https://github.com/vercel-labs/agent-skills) for **Cursor** (`--copy` avoids symlink issues on some Windows setups), then **`npx gitnexus@latest setup`** and **`npx gitnexus@latest analyze --skip-agents-md`** (indexes this repo; `--skip-agents-md` keeps the repo’s hand-written [`AGENTS.md`](../../AGENTS.md) from being regenerated).
 
 ## Where files go (Cursor)
 

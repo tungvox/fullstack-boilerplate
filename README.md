@@ -16,7 +16,7 @@ Single-user subscriptions with **Stripe Checkout + Customer Portal + webhooks**,
 - **Billing** (`/billing`) and **premium gating** (`/premium`) wired to Stripe subscription status
 - **Cursor** rules: repo conventions plus vendored **[matank001/cursor-security-rules](https://github.com/matank001/cursor-security-rules)** selections under `.cursor/rules/security/`
 - **MCP templates** for Supabase, Google Stitch, and GitNexus (`.cursor/mcp.example.json`, `docs/mcp.md`)
-- **One-command setup** — `npm run setup` installs deps, Playwright Chromium, and all **Vercel Labs** Cursor skills (see [`.cursor/skills/README.md`](.cursor/skills/README.md))
+- **One-command setup** — `npm run setup` installs deps, Playwright Chromium, all **Vercel Labs** Cursor skills, and **GitNexus** (`setup` + `analyze`; see [`.cursor/skills/README.md`](.cursor/skills/README.md))
 - **CI** via GitHub Actions (lint, unit tests, build, Playwright)
 - **Vercel-inspired UI spec** via [getdesign](https://getdesign.md): root `DESIGN.md` (refresh with `npm run design:vercel`)
 - **PWA** — web manifest + Workbox service worker (production builds use `next build --webpack`; see [`docs/pwa.md`](docs/pwa.md))
@@ -35,9 +35,9 @@ cd my-app
 npm run setup
 ```
 
-`npm run setup` runs `npm ci`, installs Playwright Chromium, and installs **all** [Vercel Labs agent skills](https://github.com/vercel-labs/agent-skills) for Cursor into `.agents/skills/` (requires network). See [`.cursor/skills/README.md`](.cursor/skills/README.md).
+`npm run setup` runs `npm ci`, installs Playwright Chromium, installs **all** [Vercel Labs agent skills](https://github.com/vercel-labs/agent-skills) for Cursor into `.agents/skills/`, runs **`npx gitnexus@latest setup`** (writes global Cursor MCP + GitNexus skills), then **`npx gitnexus@latest analyze --skip-agents-md`** to index this repo without overwriting [`AGENTS.md`](AGENTS.md) (requires network). See [`.cursor/skills/README.md`](.cursor/skills/README.md) and [docs/mcp.md](docs/mcp.md).
 
-**What setup does not do:** it does not create Supabase/Stripe projects or write secrets. After setup, copy env and wire cloud services:
+**What setup does not do:** it does not create Supabase/Stripe projects or write secrets. **GitNexus `setup`** writes **global** Cursor MCP config (for example `~/.cursor/mcp.json`); review or merge if you already customize MCP. After setup, copy env and wire cloud services:
 
 ```bash
 cp .env.example .env.local
@@ -55,7 +55,7 @@ If you changed dependencies without updating the lockfile and `npm ci` fails, ru
 
 ## Scripts
 
-- `npm run setup` — post-clone install: `npm ci`, Playwright Chromium, Vercel Labs Cursor skills (see [`.cursor/skills/README.md`](.cursor/skills/README.md))
+- `npm run setup` — post-clone install: `npm ci`, Playwright Chromium, Vercel Labs Cursor skills, GitNexus `setup` + `analyze` (see [`.cursor/skills/README.md`](.cursor/skills/README.md))
 - `npm run dev` — Next dev server (Turbopack)
 - `npm run build` / `npm run start` — production build and server
 - `npm run lint` — ESLint (Next core web vitals + TypeScript presets)

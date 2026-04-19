@@ -4,8 +4,10 @@
  * - Installs Node dependencies from the lockfile (`npm ci`).
  * - Installs Playwright Chromium for `npm run test:e2e`.
  * - Installs all Vercel Labs agent skills for Cursor into `.agents/skills/` (non-interactive).
+ * - Runs **GitNexus** `setup` (global Cursor MCP + bundled skills) then `analyze` for this repo.
  *
  * Requires network access. Uses `--copy` for skills to avoid symlink issues on some Windows setups.
+ * GitNexus `analyze` uses `--skip-agents-md` so hand-written [`AGENTS.md`](../AGENTS.md) is not regenerated.
  * If `npm ci` fails on a dirty tree, run `npm install` manually, then re-run this script (or run the remaining steps).
  */
 
@@ -40,6 +42,19 @@ run("Install Vercel Labs skills for Cursor", "npx", [
   "cursor",
   "-y",
   "--copy",
+]);
+
+run("GitNexus Cursor MCP and global skills", "npx", [
+  "-y",
+  "gitnexus@latest",
+  "setup",
+]);
+
+run("GitNexus index this repository", "npx", [
+  "-y",
+  "gitnexus@latest",
+  "analyze",
+  "--skip-agents-md",
 ]);
 
 console.log("\n[setup] Done.\n");

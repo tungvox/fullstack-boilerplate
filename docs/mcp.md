@@ -111,6 +111,8 @@ You will still need Google Cloud / Stitch project prerequisites as described in 
 
 ## GitNexus MCP
 
+This repo’s **`npm run setup`** already runs `npx gitnexus@latest setup` and `npx gitnexus@latest analyze --skip-agents-md` (see [`scripts/setup.mjs`](../scripts/setup.mjs)). You can still run the commands manually:
+
 GitNexus can install Cursor MCP for you:
 
 ```bash
