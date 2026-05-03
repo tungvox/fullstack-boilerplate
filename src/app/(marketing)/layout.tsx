@@ -1,3 +1,4 @@
+import { Box } from "@mantine/core";
 import type { ReactNode } from "react";
 
 export default function MarketingLayout({
@@ -5,5 +6,5 @@ export default function MarketingLayout({
 }: {
   children: ReactNode;
 }) {
-  return <div className="flex min-h-full flex-col">{children}</div>;
+  return <Box mih="100vh">{children}</Box>;
 }

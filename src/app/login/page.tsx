@@ -1,4 +1,5 @@
 import { LoginForm } from "@/app/login/login-form";
+import { Center, Text } from "@mantine/core";
 import { Suspense } from "react";
 
 export const metadata = {
@@ -7,10 +8,10 @@ export const metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-4 py-16">
-      <Suspense fallback={<div className="text-sm text-zinc-500">Loading…</div>}>
+    <Center mih="100vh" px="md" py="xl">
+      <Suspense fallback={<Text size="sm" c="dimmed">Loading...</Text>}>
         <LoginForm />
       </Suspense>
-    </div>
+    </Center>
   );
 }

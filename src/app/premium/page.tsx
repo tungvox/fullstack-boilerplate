@@ -1,5 +1,6 @@
+import { Stack, Text, Title } from "@mantine/core";
+import { LinkAnchor } from "@/components/link-anchor";
 import { getEntitlements } from "@/lib/entitlements";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -18,29 +19,19 @@ export default async function PremiumPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 py-16">
-      <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-        Premium
-      </h1>
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+    <Stack maw={720} mx="auto" px="md" py="xl" gap="md">
+      <Title order={1}>Premium</Title>
+      <Text size="sm" c="dimmed">
         You have an active or trialing subscription (
-        <span className="font-mono">{entitlements.status}</span>). Replace this page
-        with your paid product surface.
-      </p>
-      <div className="flex flex-col gap-3 text-sm font-medium">
-        <Link
-          className="text-zinc-700 underline underline-offset-4 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-50"
-          href="/billing"
-        >
-          Manage billing
-        </Link>
-        <Link
-          className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-          href="/protected"
-        >
-          ← Protected demo
-        </Link>
-      </div>
-    </div>
+        <Text span ff="monospace" c="text">
+          {entitlements.status}
+        </Text>
+        ). Replace this page with your paid product surface.
+      </Text>
+      <Stack gap={6}>
+        <LinkAnchor href="/billing">Manage billing</LinkAnchor>
+        <LinkAnchor href="/protected">← Protected demo</LinkAnchor>
+      </Stack>
+    </Stack>
   );
 }

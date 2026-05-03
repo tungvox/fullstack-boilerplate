@@ -1,5 +1,6 @@
+import { Anchor, Stack, Text, Title } from "@mantine/core";
+import { LinkAnchor } from "@/components/link-anchor";
 import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -17,45 +18,25 @@ export default async function ProtectedPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 py-16">
-      <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-        Protected page
-      </h1>
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+    <Stack maw={720} mx="auto" px="md" py="xl" gap="md">
+      <Title order={1}>Protected page</Title>
+      <Text size="sm" c="dimmed">
         You are signed in as{" "}
-        <span className="font-mono text-zinc-900 dark:text-zinc-100">
+        <Text span ff="monospace" c="text">
           {user.email ?? user.id}
-        </span>
+        </Text>
         . Session cookies were refreshed in middleware.
-      </p>
-      <div className="flex flex-col gap-2 text-sm font-medium">
-        <Link
-          className="text-zinc-700 underline underline-offset-4 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-50"
-          href="/billing"
-        >
-          Billing
-        </Link>
-        <Link
-          className="text-zinc-700 underline underline-offset-4 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-50"
-          href="/premium"
-        >
-          Premium (gated)
-        </Link>
-      </div>
+      </Text>
+      <Stack gap={4}>
+        <LinkAnchor href="/billing">Billing</LinkAnchor>
+        <LinkAnchor href="/premium">Premium (gated)</LinkAnchor>
+      </Stack>
       <form action="/auth/signout" method="post">
-        <button
-          type="submit"
-          className="text-sm font-medium text-zinc-700 underline underline-offset-4 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-50"
-        >
+        <Anchor component="button" type="submit">
           Sign out
-        </button>
+        </Anchor>
       </form>
-      <Link
-        href="/"
-        className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-      >
-        ← Home
-      </Link>
-    </div>
+      <LinkAnchor href="/">← Home</LinkAnchor>
+    </Stack>
   );
 }

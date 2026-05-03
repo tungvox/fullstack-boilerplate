@@ -1,7 +1,17 @@
+import {
+  Alert,
+  Button,
+  Card,
+  Group,
+  Stack,
+  Table,
+  Text,
+  Title,
+} from "@mantine/core";
 import { openCustomerPortal, startCheckout } from "@/app/billing/actions";
+import { LinkAnchor } from "@/components/link-anchor";
 import { createClient } from "@/lib/supabase/server";
 import { isProSubscriptionStatus } from "@/lib/subscription-status";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -43,95 +53,84 @@ export default async function BillingPage({
   const stripeConfigured = Boolean(process.env.STRIPE_PRICE_ID);
 
   return (
-    <div className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 py-16">
+    <Stack maw={720} mx="auto" px="md" py="xl" gap="md">
       <div>
-        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-          Billing
-        </h1>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+        <Title order={1}>Billing</Title>
+        <Text mt={8} size="sm" c="dimmed">
           Stripe Checkout + Customer Portal. Webhooks sync subscription state into
           Supabase (`billing_subscriptions`).
-        </p>
+        </Text>
       </div>
 
       {!stripeConfigured && (
-        <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-100">
-          Set <span className="font-mono">STRIPE_PRICE_ID</span> and other Stripe env
-          vars (see <span className="font-mono">docs/saas-day-one.md</span> in the repo)
-          to enable payments in this environment.
-        </p>
+        <Alert color="yellow" variant="light">
+          Set <Text span ff="monospace">STRIPE_PRICE_ID</Text> and other Stripe env vars
+          (see <Text span ff="monospace">docs/saas-day-one.md</Text> in the repo) to
+          enable payments in this environment.
+        </Alert>
       )}
 
       {checkout === "success" && (
-        <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-100">
+        <Alert color="green" variant="light">
           Checkout completed. It can take a few seconds for webhooks to update your
           subscription row — refresh if your status does not flip to active yet.
-        </p>
+        </Alert>
       )}
 
       {checkout === "canceled" && (
-        <p className="rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100">
-          Checkout canceled. No charges were made.
-        </p>
+        <Alert color="gray" variant="light">Checkout canceled. No charges were made.</Alert>
       )}
 
       {portal === "missing_customer" && (
-        <p className="rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100">
+        <Alert color="gray" variant="light">
           Start a subscription first so Stripe has a customer record to open in the
           portal.
-        </p>
+        </Alert>
       )}
 
-      <div className="rounded-xl border border-zinc-200 bg-white p-6 text-sm text-zinc-700 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-200">
-        <p className="font-medium text-zinc-900 dark:text-zinc-50">Subscription</p>
-        <dl className="mt-3 space-y-2">
-          <div className="flex justify-between gap-4">
-            <dt className="text-zinc-500 dark:text-zinc-400">Status</dt>
-            <dd className="font-mono text-xs">{subscription?.status ?? "none"}</dd>
-          </div>
-          <div className="flex justify-between gap-4">
-            <dt className="text-zinc-500 dark:text-zinc-400">Pro access</dt>
-            <dd>{isPro ? "yes" : "no"}</dd>
-          </div>
+      <Card withBorder shadow="sm" radius="md">
+        <Text fw={600}>Subscription</Text>
+        <Table mt="sm" withRowBorders={false}>
+          <Table.Tbody>
+            <Table.Tr>
+              <Table.Td c="dimmed">Status</Table.Td>
+              <Table.Td ff="monospace" fz="xs">{subscription?.status ?? "none"}</Table.Td>
+            </Table.Tr>
+            <Table.Tr>
+              <Table.Td c="dimmed">Pro access</Table.Td>
+              <Table.Td>{isPro ? "yes" : "no"}</Table.Td>
+            </Table.Tr>
           {subscription?.current_period_end && (
-            <div className="flex justify-between gap-4">
-              <dt className="text-zinc-500 dark:text-zinc-400">Renews / ends</dt>
-              <dd className="text-xs">
+            <Table.Tr>
+              <Table.Td c="dimmed">Renews / ends</Table.Td>
+              <Table.Td fz="xs">
                 {new Date(subscription.current_period_end).toLocaleString()}
-              </dd>
-            </div>
+              </Table.Td>
+            </Table.Tr>
           )}
-        </dl>
-      </div>
+          </Table.Tbody>
+        </Table>
+      </Card>
 
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <Group>
         <form action={startCheckout}>
-          <button
-            type="submit"
-            disabled={!stripeConfigured}
-            className="inline-flex h-11 w-full items-center justify-center rounded-md bg-zinc-900 px-4 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 sm:w-auto"
-          >
+          <Button type="submit" disabled={!stripeConfigured}>
             {isPro ? "Manage plan (Checkout)" : "Subscribe with Stripe"}
-          </button>
+          </Button>
         </form>
 
         <form action={openCustomerPortal}>
-          <button
+          <Button
             type="submit"
+            variant="default"
             disabled={!hasStripeCustomer || !stripeConfigured}
-            className="inline-flex h-11 w-full items-center justify-center rounded-md border border-zinc-300 px-4 text-sm font-medium text-zinc-900 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-900 sm:w-auto"
           >
             Customer portal
-          </button>
+          </Button>
         </form>
-      </div>
+      </Group>
 
-      <Link
-        href="/"
-        className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-      >
-        ← Home
-      </Link>
-    </div>
+      <LinkAnchor href="/">← Home</LinkAnchor>
+    </Stack>
   );
 }
